@@ -4,10 +4,25 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/darrenjon/restaurant-ordering-system/internal/config"
+	"github.com/darrenjon/restaurant-ordering-system/internal/database"
 	"github.com/gorilla/mux"
 )
 
 func main() {
+	// Load database configuration
+	dbConfig, err := config.LoadDatabaseConfig()
+	if err != nil {
+		log.Fatalf("Failed to load database config: %v", err)
+	}
+
+	// Create database manager
+	dbManager, err := database.NewManager(dbConfig)
+	if err != nil {
+		log.Fatalf("Failed to create database manager: %v", err)
+	}
+	defer dbManager.Close()
+
 	r := mux.NewRouter()
 
 	// Add a simple health check route
