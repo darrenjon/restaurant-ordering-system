@@ -17,6 +17,7 @@ func (m *Manager) RunMigrations() error {
 				username VARCHAR(50) UNIQUE NOT NULL,
 				password VARCHAR(100) NOT NULL,
 				email VARCHAR(100) UNIQUE NOT NULL,
+				role VARCHAR(20) NOT NULL,
 				created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
 				updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 			)`,
@@ -26,6 +27,7 @@ func (m *Manager) RunMigrations() error {
 			sql: `CREATE TABLE IF NOT EXISTS categories (
 				id SERIAL PRIMARY KEY,
 				name VARCHAR(50) UNIQUE NOT NULL,
+				display_order INT NOT NULL,
 				created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
 				updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 			)`,
@@ -39,8 +41,30 @@ func (m *Manager) RunMigrations() error {
 				description TEXT,
 				price DECIMAL(10, 2) NOT NULL,
 				image_url VARCHAR(255),
+				is_available BOOLEAN NOT NULL DEFAULT TRUE,
 				created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
 				updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+			)`,
+		},
+		{
+			name: "Create add_ons table",
+			sql: `CREATE TABLE IF NOT EXISTS add_ons (
+				id SERIAL PRIMARY KEY,
+				name VARCHAR(50) NOT NULL,
+				price DECIMAL(10, 2) NOT NULL,
+				created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+				updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+			)`,
+		},
+		{
+			name: "Create menu_item_add_ons table",
+			sql: `CREATE TABLE IF NOT EXISTS menu_item_add_ons (
+				id SERIAL PRIMARY KEY,
+				menu_item_id INT REFERENCES menu_items(id),
+				add_on_id INT REFERENCES add_ons(id),
+				created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+				updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+				UNIQUE(menu_item_id, add_on_id)
 			)`,
 		},
 		{
@@ -61,7 +85,36 @@ func (m *Manager) RunMigrations() error {
 				order_id INT REFERENCES orders(id),
 				menu_item_id INT REFERENCES menu_items(id),
 				quantity INT NOT NULL,
+				unit_price DECIMAL(10, 2) NOT NULL,
 				subtotal DECIMAL(10, 2) NOT NULL,
+				special_instructions TEXT,
+				created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+				updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+			)`,
+		},
+		{
+			name: "Create order_item_add_ons table",
+			sql: `CREATE TABLE IF NOT EXISTS order_item_add_ons (
+				id SERIAL PRIMARY KEY,
+				order_item_id INT REFERENCES order_items(id),
+				add_on_id INT REFERENCES add_ons(id),
+				price DECIMAL(10, 2) NOT NULL,
+				created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+				updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+			)`,
+		},
+		{
+			name: "Create restaurant_info table",
+			sql: `CREATE TABLE IF NOT EXISTS restaurant_info (
+				id SERIAL PRIMARY KEY,
+				name VARCHAR(100) NOT NULL,
+				description TEXT,
+				address TEXT,
+				phone VARCHAR(20),
+				email VARCHAR(100),
+				logo_url VARCHAR(255),
+				banner_url VARCHAR(255),
+				opening_hours JSONB,
 				created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
 				updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 			)`,
