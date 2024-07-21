@@ -23,6 +23,11 @@ func main() {
 	}
 	defer dbManager.Close()
 
+	// Run database migrations
+	if err := dbManager.RunMigrations(); err != nil {
+		log.Fatalf("Failed to run database migrations: %v", err)
+	}
+
 	r := mux.NewRouter()
 
 	// Add a simple health check route
