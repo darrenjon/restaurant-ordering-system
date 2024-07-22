@@ -6,6 +6,7 @@ import (
 
 	"github.com/darrenjon/restaurant-ordering-system/internal/config"
 	"github.com/darrenjon/restaurant-ordering-system/internal/database"
+	"github.com/darrenjon/restaurant-ordering-system/internal/handlers"
 	"github.com/gorilla/mux"
 )
 
@@ -21,14 +22,18 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to create database manager: %v", err)
 	}
-	defer dbManager.Close()
 
-	// Run database migrations
-	if err := dbManager.RunMigrations(); err != nil {
-		log.Fatalf("Failed to run database migrations: %v", err)
+	// Run auto migrations
+	if err := dbManager.AutoMigrate(); err != nil {
+		log.Fatalf("Failed to run auto migrations: %v", err)
 	}
 
 	r := mux.NewRouter()
+
+	// Restaurant info routes
+	r.HandleFunc("/api/restaurant-info", handlers.GetRestaurantInfo(dbManager)).Methods("GET")
+	r.HandleFunc("/api/restaurant-info", handlers.UpdateRestaurantInfo(dbManager)).Methods("PUT")
+	r.HandleFunc("/api/restaurant-info/open", handlers.CheckRestaurantOpen(dbManager)).Methods("GET")
 
 	// Add a simple health check route
 	r.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
