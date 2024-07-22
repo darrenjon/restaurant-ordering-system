@@ -50,10 +50,9 @@ func (m *Manager) AutoMigrate() error {
 		&models.Category{},
 		&models.MenuItem{},
 		&models.AddOn{},
-		&models.MenuItemAddOn{},
 		&models.Order{},
-		&models.OrderItem{},
-		&models.OrderItemAddOn{},
+		&models.OrderDetail{},
+		&models.SelectedAddOn{},
 		&models.RestaurantInfo{},
 	)
 }

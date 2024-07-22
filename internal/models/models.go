@@ -26,36 +26,32 @@ type Category struct {
 
 type MenuItem struct {
 	gorm.Model
-	CategoryID  uint
-	Name        string `gorm:"not null"`
-	Description string
-	Price       float64 `gorm:"not null"`
-	ImageURL    string
-	IsAvailable bool    `gorm:"not null;default:true"`
-	AddOns      []AddOn `gorm:"many2many:menu_item_add_ons;"`
+	CategoryID   uint
+	Name         string `gorm:"not null"`
+	Description  string
+	Price        float64 `gorm:"not null"`
+	ImageURL     string
+	IsAvailable  bool `gorm:"not null;default:true"`
+	AddOns       []AddOn
+	OrderDetails []OrderDetail
 }
 
 type AddOn struct {
 	gorm.Model
-	Name  string  `gorm:"not null"`
-	Price float64 `gorm:"not null"`
-}
-
-type MenuItemAddOn struct {
-	gorm.Model
 	MenuItemID uint
-	AddOnID    uint
+	Name       string  `gorm:"not null"`
+	Price      float64 `gorm:"not null"`
 }
 
 type Order struct {
 	gorm.Model
-	TableNumber string  `gorm:"not null"`
-	Status      string  `gorm:"not null"`
-	TotalAmount float64 `gorm:"not null"`
-	OrderItems  []OrderItem
+	TableNumber  string  `gorm:"not null"`
+	Status       string  `gorm:"not null"`
+	TotalAmount  float64 `gorm:"not null"`
+	OrderDetails []OrderDetail
 }
 
-type OrderItem struct {
+type OrderDetail struct {
 	gorm.Model
 	OrderID             uint
 	MenuItemID          uint
@@ -63,14 +59,15 @@ type OrderItem struct {
 	UnitPrice           float64 `gorm:"not null"`
 	Subtotal            float64 `gorm:"not null"`
 	SpecialInstructions string
-	AddOns              []OrderItemAddOn
+	SelectedAddOns      []SelectedAddOn
 }
 
-type OrderItemAddOn struct {
+type SelectedAddOn struct {
 	gorm.Model
-	OrderItemID uint
-	AddOnID     uint
-	Price       float64 `gorm:"not null"`
+	OrderDetailID uint
+	AddOnID       uint
+	Name          string  `gorm:"not null"`
+	Price         float64 `gorm:"not null"`
 }
 
 type TimeRange struct {
