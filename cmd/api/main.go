@@ -46,6 +46,13 @@ func main() {
 	r.HandleFunc("/api/categories/{id}", handlers.UpdateCategory(dbManager)).Methods("PUT")
 	r.HandleFunc("/api/categories/{id}", handlers.DeleteCategory(dbManager)).Methods("DELETE")
 
+	// Menu item routes
+	r.HandleFunc("/api/menu-items", handlers.GetMenuItems(dbManager)).Methods("GET")
+	r.HandleFunc("/api/menu-items/{id}", handlers.GetMenuItem(dbManager)).Methods("GET")
+	r.HandleFunc("/api/menu-items", handlers.CreateMenuItem(dbManager)).Methods("POST")
+	r.HandleFunc("/api/menu-items/{id}", handlers.UpdateMenuItem(dbManager)).Methods("PUT")
+	r.HandleFunc("/api/menu-items/{id}", handlers.DeleteMenuItem(dbManager)).Methods("DELETE")
+
 	// Add a simple health check route
 	r.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)

@@ -26,14 +26,13 @@ type Category struct {
 
 type MenuItem struct {
 	gorm.Model
-	CategoryID   uint
-	Name         string `gorm:"not null"`
-	Description  string
-	Price        float64 `gorm:"not null"`
-	ImageURL     string
-	IsAvailable  bool `gorm:"not null;default:true"`
-	AddOns       []AddOn
-	OrderDetails []OrderDetail
+	CategoryID  uint
+	Name        string `gorm:"not null"`
+	Description string
+	Price       float64 `gorm:"not null"`
+	ImageURL    string
+	IsAvailable bool `gorm:"not null;default:true"`
+	AddOns      []AddOn
 }
 
 type AddOn struct {
