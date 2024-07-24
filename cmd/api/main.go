@@ -35,6 +35,9 @@ func main() {
 
 	r := mux.NewRouter()
 
+	// User routes
+	r.HandleFunc("/api/users", handlers.CreateUser(dbManager)).Methods("POST")
+
 	// Restaurant info routes
 	r.HandleFunc("/api/restaurant-info", handlers.GetRestaurantInfo(dbManager)).Methods("GET")
 	r.HandleFunc("/api/restaurant-info", handlers.UpdateRestaurantInfo(dbManager)).Methods("PUT")
