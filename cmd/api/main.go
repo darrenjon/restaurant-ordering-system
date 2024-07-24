@@ -37,6 +37,10 @@ func main() {
 
 	// User routes
 	r.HandleFunc("/api/users", handlers.CreateUser(dbManager)).Methods("POST")
+	r.HandleFunc("/api/users", handlers.GetUsers(dbManager)).Methods("GET")
+	r.HandleFunc("/api/users/{id}", handlers.GetUser(dbManager)).Methods("GET")
+	r.HandleFunc("/api/users/{id}", handlers.UpdateUser(dbManager)).Methods("PUT")
+	r.HandleFunc("/api/users/{id}", handlers.DeleteUser(dbManager)).Methods("DELETE")
 
 	// Restaurant info routes
 	r.HandleFunc("/api/restaurant-info", handlers.GetRestaurantInfo(dbManager)).Methods("GET")
