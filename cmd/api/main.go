@@ -35,8 +35,13 @@ func main() {
 
 	r := mux.NewRouter()
 
+	r.HandleFunc("/api/auth/login", handlers.Login(dbManager)).Methods("POST")
+	r.HandleFunc("/api/auth/logout", handlers.Logout).Methods("POST")
+
 	// User routes
 	r.HandleFunc("/api/users", handlers.CreateUser(dbManager)).Methods("POST")
+	// test auth middleware
+	// r.HandleFunc("/api/users", middleware.AuthMiddleware(dbConfig)(handlers.GetUsers(dbManager))).Methods("GET")
 	r.HandleFunc("/api/users", handlers.GetUsers(dbManager)).Methods("GET")
 	r.HandleFunc("/api/users/{id}", handlers.GetUser(dbManager)).Methods("GET")
 	r.HandleFunc("/api/users/{id}", handlers.UpdateUser(dbManager)).Methods("PUT")

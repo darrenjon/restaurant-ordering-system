@@ -14,7 +14,8 @@ import (
 )
 
 type Manager struct {
-	db *gorm.DB
+	db     *gorm.DB
+	Config *config.DatabaseConfig
 }
 
 func NewManager(cfg *config.DatabaseConfig) (*Manager, error) {
@@ -33,7 +34,10 @@ func NewManager(cfg *config.DatabaseConfig) (*Manager, error) {
 	}
 
 	logger.InfoLogger.Println("Connected to database successfully")
-	return &Manager{db: db}, nil
+	return &Manager{
+		db:     db,
+		Config: cfg,
+	}, nil
 }
 
 func (m *Manager) GetDB() *gorm.DB {
